@@ -2,7 +2,15 @@ import React from 'react';
 import PopupWithForm from './PopupWithForm';
 import PopupImage from './PopupImage';
 
-const Main = ({ onEditAvatar, onEditProfile, onAddPlace }) => {
+const Main = ({
+  onEditAvatar,
+  onEditProfile,
+  onAddPlace,
+  onClose,
+  isEditAvatarPopupOpen,
+  isEditProfilePopupOpen,
+  isAddPlacePopupOpen,
+}) => {
   return (
     <main className="content">
       <section className="profile">
@@ -34,6 +42,8 @@ const Main = ({ onEditAvatar, onEditProfile, onAddPlace }) => {
       </section>
       <section className="cards"></section>
       <PopupWithForm
+        isOpen={isEditAvatarPopupOpen}
+        onClose={onClose}
         title="Обновить аватар"
         name="avatar-form"
         children={
@@ -59,6 +69,8 @@ const Main = ({ onEditAvatar, onEditProfile, onAddPlace }) => {
         }
       />
       <PopupWithForm
+        isOpen={isEditProfilePopupOpen}
+        onClose={onClose}
         title="Редактировать профиль"
         name="profile-form"
         children={
@@ -99,6 +111,8 @@ const Main = ({ onEditAvatar, onEditProfile, onAddPlace }) => {
         }
       />
       <PopupWithForm
+        isOpen={isAddPlacePopupOpen}
+        onClose={onClose}
         title="Новое Место"
         name="card-form"
         children={

@@ -1,21 +1,29 @@
+import React, { useState } from 'react';
 import Footer from './Footer';
 import Header from './Header';
 import Main from './Main';
 
 function App() {
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
+
   const handleEditAvatarClick = () => {
-    const popup = document.querySelector('#popup-avatar-form');
-    popup.classList.add('popup_opened');
+    setIsEditAvatarPopupOpen(true);
   };
 
   const handleEditProfileClick = () => {
-    const popup = document.querySelector('#popup-profile-form');
-    popup.classList.add('popup_opened');
+    setIsEditProfilePopupOpen(true);
   };
 
   const handleAddPlaceClick = () => {
-    const popup = document.querySelector('#popup-card-form');
-    popup.classList.add('popup_opened');
+    setIsAddPlacePopupOpen(true);
+  };
+
+  const closeAllPopups = () => {
+    setIsEditAvatarPopupOpen(false);
+    setIsEditProfilePopupOpen(false);
+    setIsAddPlacePopupOpen(false);
   };
 
   return (
@@ -25,6 +33,10 @@ function App() {
         onEditAvatar={handleEditAvatarClick}
         onEditProfile={handleEditProfileClick}
         onAddPlace={handleAddPlaceClick}
+        onClose={closeAllPopups}
+        isEditAvatarPopupOpen={isEditAvatarPopupOpen}
+        isEditProfilePopupOpen={isEditProfilePopupOpen}
+        isAddPlacePopupOpen={isAddPlacePopupOpen}
       />
       <Footer />
     </div>

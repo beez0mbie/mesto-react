@@ -11,16 +11,17 @@ import React from 'react';
 // id="popup-delete">
 // name="delete-form"
 
-const PopupWithForm = ({ title, name, children }) => {
+const PopupWithForm = ({ title, name, children, isOpen, onClose }) => {
   return (
     <div
-      className="popup"
+      className={`popup ${isOpen ? 'popup_opened' : ''}`}
       id={`popup-${name}`}>
       <div className="popup__container">
         <button
           aria-label="Закрыть попап"
           type="button"
-          className="popup__close-button"></button>
+          className="popup__close-button"
+          onClick={onClose}></button>
         <form
           action="./"
           name={name}
