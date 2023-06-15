@@ -1,15 +1,14 @@
 import React from 'react';
+import PopupWithForm from './PopupWithForm';
+import PopupImage from './PopupImage';
 
-const Main = () => {
-  const handleEditAvatarClick = () => {
-    const popup = document.querySelector('#popup-change-profile');
-    popup.classList.add('popup_opened');
-  };
-
+const Main = ({ onEditAvatar, onEditProfile, onAddPlace }) => {
   return (
     <main className="content">
       <section className="profile">
-        <figure className="profile__logo-container">
+        <figure
+          className="profile__logo-container"
+          onClick={onEditAvatar}>
           <img
             src="./images/Custo.jpg"
             alt="Аватар"
@@ -23,67 +22,133 @@ const Main = () => {
               aria-label="Редактировать профиль"
               type="button"
               className="profile__edit-button"
-              onClick={handleEditAvatarClick}></button>
+              onClick={onEditProfile}></button>
           </div>
           <p className="profile__subtitle"></p>
         </div>
         <button
           aria-label="Добавить карточку"
           type="button"
-          className="profile__add-button"></button>
+          className="profile__add-button"
+          onClick={onAddPlace}></button>
       </section>
       <section className="cards"></section>
-      <div
-        className="popup"
-        id="popup-change-profile">
-        <div className="popup__container">
+      <PopupWithForm
+        title="Обновить аватар"
+        name="avatar-form"
+        children={
+          <>
+            <label className="popup-form__field">
+              <input
+                type="url"
+                name="popup-input-link-avatar"
+                id="popup-input-link-avatar"
+                placeholder="Ссылка на картинку"
+                className="popup-form__input"
+                required
+              />
+              <span className="popup-form__input-error popup-input-link-avatar-error"></span>
+            </label>
+            <button
+              type="submit"
+              aria-label="Сохранить аватар"
+              className="popup-form__button">
+              Сохранить
+            </button>
+          </>
+        }
+      />
+      <PopupWithForm
+        title="Редактировать профиль"
+        name="profile-form"
+        children={
+          <>
+            <label className="popup-form__field">
+              <input
+                type="text"
+                name="popup-input-name"
+                id="popup-input-name"
+                placeholder="Введите имя профиля"
+                className="popup-form__input"
+                required
+                minLength="2"
+                maxLength="40"
+              />
+              <span className="popup-form__input-error popup-input-name-error"></span>
+            </label>
+            <label className="popup-form__field">
+              <input
+                type="text"
+                name="popup-input-job"
+                id="popup-input-job"
+                placeholder="Введите название работы"
+                className="popup-form__input"
+                required
+                minLength="2"
+                maxLength="200"
+              />
+              <span className="popup-form__input-error popup-input-job-error"></span>
+            </label>
+            <button
+              type="submit"
+              aria-label="Сохранить  изменения"
+              className="popup-form__button">
+              Сохранить
+            </button>
+          </>
+        }
+      />
+      <PopupWithForm
+        title="Новое Место"
+        name="card-form"
+        children={
+          <>
+            <label className="popup-form__field">
+              <input
+                type="text"
+                name="popup-input-place"
+                id="popup-input-place"
+                placeholder="Название"
+                className="popup-form__input"
+                minLength="2"
+                maxLength="30"
+                required
+              />
+              <span className="popup-form__input-error popup-input-place-error"></span>
+            </label>
+            <label className="popup-form__field">
+              <input
+                type="url"
+                name="popup-input-link"
+                id="popup-input-link"
+                placeholder="Ссылка на картинку"
+                className="popup-form__input"
+                required
+              />
+              <span className="popup-form__input-error popup-input-link-error"></span>
+            </label>
+            <button
+              type="submit"
+              aria-label="Сохранить  изменения"
+              className="popup-form__button">
+              Создать
+            </button>
+          </>
+        }
+      />
+      <PopupWithForm
+        title="Вы уверены?"
+        name="delete-form"
+        children={
           <button
-            aria-label="Закрыть попап"
-            type="button"
-            className="popup__close-button"></button>
-          <form
-            action="./"
-            name="profile-form"
-            className="popup-form"
-            novalidate>
-            <fieldset className="popup-form__fieldset">
-              <h2 className="popup-form__title">Редактировать профиль</h2>
-              <label className="popup-form__field">
-                <input
-                  type="text"
-                  name="popup-input-name"
-                  id="popup-input-name"
-                  placeholder="Введите имя профиля"
-                  className="popup-form__input"
-                  required
-                  minlength="2"
-                  maxlength="40"
-                />
-                <span className="popup-form__input-error popup-input-name-error"></span>
-              </label>
-              <label className="popup-form__field">
-                <input
-                  type="text"
-                  name="popup-input-job"
-                  id="popup-input-job"
-                  placeholder="Введите название работы"
-                  className="popup-form__input"
-                  required
-                  minlength="2"
-                  maxlength="200"
-                />
-                <span className="popup-form__input-error popup-input-job-error"></span>
-              </label>
-              <button
-                type="submit"
-                aria-label="Сохранить  изменения"
-                className="popup-form__button">
-                Сохранить
-              </button>
-            </fieldset>
-          </form>
-        </div>
-      </div>
+            type="submit"
+            aria-label="Удалить карточку"
+            className="popup-form__button">
+            Да
+          </button>
+        }
+      />
+      <PopupImage />
     </main>
   );
 };
