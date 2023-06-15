@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PopupWithForm from './PopupWithForm';
 import PopupImage from './PopupImage';
+import { api } from '../utils/Api';
 
 const Main = ({
   onEditAvatar,
@@ -11,6 +12,21 @@ const Main = ({
   isEditProfilePopupOpen,
   isAddPlacePopupOpen,
 }) => {
+  const [userName, setUserName] = useState('');
+  const [userDescription, setUserDescription] = useState('');
+  const [userAvatar, setUserAvatar] = useState('');
+
+  useEffect(() => {
+    api
+      .getUserInfo()
+      .then((res) => {
+        setUserName(res.name);
+        setUserDescription(res.about);
+        setUserAvatar(res.avatar);
+      })
+      .catch((err) => console.error(`Error api.getUserInfo():\n ${err}`));
+  });
+
   return (
     <main className="content">
       <section className="profile">
@@ -18,21 +34,21 @@ const Main = ({
           className="profile__logo-container"
           onClick={onEditAvatar}>
           <img
-            src="./images/Custo.jpg"
+            src={userAvatar}
             alt="Аватар"
             className="profile__logo"
           />
         </figure>
         <div className="profile__info">
           <div className="profile__title-container">
-            <h1 className="profile__title">Жак-Ив Кусто</h1>
+            <h1 className="profile__title">{userName}</h1>
             <button
               aria-label="Редактировать профиль"
               type="button"
               className="profile__edit-button"
               onClick={onEditProfile}></button>
           </div>
-          <p className="profile__subtitle"></p>
+          <p className="profile__subtitle">{userDescription}</p>
         </div>
         <button
           aria-label="Добавить карточку"
