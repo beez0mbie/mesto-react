@@ -12,6 +12,8 @@ const Main = ({
   isEditAvatarPopupOpen,
   isEditProfilePopupOpen,
   isAddPlacePopupOpen,
+  onCardClick,
+  card,
 }) => {
   const [userName, setUserName] = useState('');
   const [userDescription, setUserDescription] = useState('');
@@ -65,6 +67,7 @@ const Main = ({
           <Card
             card={card}
             key={card._id}
+            onCardClick={onCardClick}
           />
         ))}
       </section>
@@ -180,6 +183,7 @@ const Main = ({
       <PopupWithForm
         title="Вы уверены?"
         name="delete-form"
+        onClose={onClose}
         children={
           <button
             type="submit"
@@ -189,7 +193,10 @@ const Main = ({
           </button>
         }
       />
-      <PopupImage />
+      <PopupImage
+        card={card}
+        onClose={onClose}
+      />
     </main>
   );
 };

@@ -1,15 +1,17 @@
 import React from 'react';
 
-const Card = ({ card }) => {
+const Card = ({ card, onCardClick }) => {
   return (
-    <div className="card">
+    <div
+      className="card"
+      onClick={() => onCardClick(card)}>
       <button
         aria-label="Удалить"
         type="button"
         className="card__trash"></button>
       <img
         src={card.link}
-        alt="template"
+        alt={card.name}
         className="card__image"
       />
       <div className="card__info">
