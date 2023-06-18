@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PopupWithForm from './PopupWithForm';
 import PopupImage from './PopupImage';
 import { api } from '../utils/Api';
+import Card from './Card';
 
 const Main = ({
   onEditAvatar,
@@ -15,17 +16,20 @@ const Main = ({
   const [userName, setUserName] = useState('');
   const [userDescription, setUserDescription] = useState('');
   const [userAvatar, setUserAvatar] = useState('');
+  const [cards, setCadrs] = useState([]);
 
   useEffect(() => {
     api
-      .getUserInfo()
+      .getAppInfo()
       .then((res) => {
-        setUserName(res.name);
-        setUserDescription(res.about);
-        setUserAvatar(res.avatar);
+        const [userInfo, cards] = res;
+        setUserName(userInfo.name);
+        setUserDescription(userInfo.about);
+        setUserAvatar(userInfo.avatar);
+        setCadrs(cards.reverse());
       })
       .catch((err) => console.error(`Error api.getUserInfo():\n ${err}`));
-  });
+  }, []);
 
   return (
     <main className="content">
@@ -56,7 +60,14 @@ const Main = ({
           className="profile__add-button"
           onClick={onAddPlace}></button>
       </section>
-      <section className="cards"></section>
+      <section className="cards">
+        {cards.map((card) => (
+          <Card
+            card={card}
+            key={card._id}
+          />
+        ))}
+      </section>
       <PopupWithForm
         isOpen={isEditAvatarPopupOpen}
         onClose={onClose}
