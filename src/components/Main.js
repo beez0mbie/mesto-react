@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PopupWithForm from './PopupWithForm';
-import PopupImage from './PopupImage';
+import ImagePopup from './ImagePopup';
 import { api } from '../utils/Api';
 import Card from './Card';
 
@@ -193,7 +193,7 @@ const Main = ({
           </button>
         }
       />
-      <PopupImage
+      <ImagePopup
         card={card}
         onClose={onClose}
       />

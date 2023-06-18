@@ -1,6 +1,6 @@
 import React from 'react';
 
-const PopupImage = ({ card, onClose }) => {
+const ImagePopup = ({ card, onClose }) => {
   return (
     <div
       className={`popup popup_overlay_dark ${card ? 'popup_opened' : ''}`}
@@ -22,4 +22,4 @@ const PopupImage = ({ card, onClose }) => {
   );
 };
 
-export default PopupImage;
+export default ImagePopup;
