@@ -8,62 +8,65 @@ class Api {
   _getJsonPromise = (result) =>
     result.ok ? result.json() : Promise.reject(`Impossible to get result.json(): ${result.status}`);
 
+  _request = (endpoint, options) =>
+    fetch(`${this.baseUrl}/${endpoint}`, options).then(this._getJsonPromise);
+
   addCard = (name, link) =>
-    fetch(`${this.baseUrl}/cards`, {
+    this._request(`cards`, {
       method: 'POST',
       headers: this.headers,
       body: JSON.stringify({
         name,
         link,
       }),
-    }).then(this._getJsonPromise);
+    });
 
   deleteCard = (cardId) =>
-    fetch(`${this.baseUrl}/cards/${cardId}`, {
+    this._request(`cards/${cardId}`, {
       method: 'DELETE',
       headers: this.headers,
-    }).then(this._getJsonPromise);
+    });
 
   likeCard = (cardId) =>
-    fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
+    this._request(`cards/${cardId}/likes`, {
       method: 'PUT',
       headers: this.headers,
-    }).then(this._getJsonPromise);
+    });
 
   dislikeCard = (cardId) =>
-    fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
+    this._request(`cards/${cardId}/likes`, {
       method: 'DELETE',
       headers: this.headers,
-    }).then(this._getJsonPromise);
+    });
 
   updateAvatar = (link) =>
-    fetch(`${this.baseUrl}/users/me/avatar`, {
+    this._request(`users/me/avatar`, {
       method: 'PATCH',
       headers: this.headers,
       body: JSON.stringify({
         avatar: link,
       }),
-    }).then(this._getJsonPromise);
+    });
 
   updateUserInfo = (name, about) =>
-    fetch(`${this.baseUrl}/users/me`, {
+    this._request(`users/me`, {
       method: 'PATCH',
       headers: this.headers,
       body: JSON.stringify({
         name,
         about,
       }),
-    }).then(this._getJsonPromise);
+    });
 
   getUserInfo = () =>
-    fetch(`${this.baseUrl}/users/me `, {
+    this._request(`users/me `, {
       headers: this.headers,
-    }).then(this._getJsonPromise);
+    });
 
   getInitialCards = () =>
-    fetch(`${this.baseUrl}/cards`, {
+    this._request(`cards`, {
       headers: this.headers,
-    }).then(this._getJsonPromise);
+    });
 
   getAppInfo() {
     return Promise.all([this.getUserInfo(), this.getInitialCards()]);

@@ -2,9 +2,7 @@ import React from 'react';
 
 const Card = ({ card, onCardClick }) => {
   return (
-    <div
-      className="card"
-      onClick={() => onCardClick(card)}>
+    <div className="card">
       <button
         aria-label="Удалить"
         type="button"
@@ -13,6 +11,7 @@ const Card = ({ card, onCardClick }) => {
         src={card.link}
         alt={card.name}
         className="card__image"
+        onClick={() => onCardClick(card)}
       />
       <div className="card__info">
         <h2 className="card__title">{card.name}</h2>

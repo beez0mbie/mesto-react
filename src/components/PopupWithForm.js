@@ -11,7 +11,7 @@ import React from 'react';
 // id="popup-delete">
 // name="delete-form"
 
-const PopupWithForm = ({ title, name, children, isOpen, onClose }) => {
+const PopupWithForm = ({ title, name, children, isOpen, onClose, buttonText }) => {
   return (
     <div
       className={`popup ${isOpen ? 'popup_opened' : ''}`}
@@ -21,15 +21,21 @@ const PopupWithForm = ({ title, name, children, isOpen, onClose }) => {
           aria-label="Закрыть попап"
           type="button"
           className="popup__close-button"
-          onClick={onClose}></button>
+          onClick={onClose}
+        />
         <form
           action="./"
           name={name}
-          className="popup-form"
-          noValidate>
+          className="popup-form">
           <fieldset className="popup-form__fieldset">
             <h2 className="popup-form__title">{title}</h2>
             {children}
+            <button
+              type="submit"
+              aria-label={buttonText}
+              className="popup-form__button">
+              {buttonText}
+            </button>
           </fieldset>
         </form>
       </div>
