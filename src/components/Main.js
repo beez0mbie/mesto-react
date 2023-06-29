@@ -1,36 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
-import { api } from '../utils/Api';
 import Card from './Card';
+import { CurrentUserContext, CardsContext } from '../contexts';
 
-const Main = ({
-  onEditAvatar,
-  onEditProfile,
-  onAddPlace,
-  onClose,
-  isEditAvatarPopupOpen,
-  isEditProfilePopupOpen,
-  isAddPlacePopupOpen,
-  onCardClick,
-  card,
-}) => {
-  const [userName, setUserName] = useState('');
-  const [userDescription, setUserDescription] = useState('');
-  const [userAvatar, setUserAvatar] = useState('');
-  const [cards, setCadrs] = useState([]);
-
-  useEffect(() => {
-    api
-      .getAppInfo()
-      .then((res) => {
-        const [userInfo, cards] = res;
-        setUserName(userInfo.name);
-        setUserDescription(userInfo.about);
-        setUserAvatar(userInfo.avatar);
-        setCadrs(cards.reverse());
-      })
-      .catch((err) => console.error(`Error api.getUserInfo():\n ${err}`));
-  }, []);
+const Main = ({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) => {
+  const userInfo = React.useContext(CurrentUserContext);
+  const cards = React.useContext(CardsContext);
 
   return (
     <main className="content">
@@ -39,21 +14,21 @@ const Main = ({
           className="profile__logo-container"
           onClick={onEditAvatar}>
           <img
-            src={userAvatar}
+            src={userInfo.avatar}
             alt="Аватар"
             className="profile__logo"
           />
         </figure>
         <div className="profile__info">
           <div className="profile__title-container">
-            <h1 className="profile__title">{userName}</h1>
+            <h1 className="profile__title">{userInfo.name}</h1>
             <button
               aria-label="Редактировать профиль"
               type="button"
               className="profile__edit-button"
               onClick={onEditProfile}></button>
           </div>
-          <p className="profile__subtitle">{userDescription}</p>
+          <p className="profile__subtitle">{userInfo.about}</p>
         </div>
         <button
           aria-label="Добавить карточку"

@@ -1,12 +1,20 @@
 import React from 'react';
+import { CurrentUserContext } from '../contexts';
 
 const Card = ({ card, onCardClick }) => {
+  const userInfo = React.useContext(CurrentUserContext);
+
+  const isMyCard = userInfo._id === card.owner._id;
+  const isMyLike = card.likes.some((like) => like._id === userInfo._id);
+
   return (
     <div className="card">
-      <button
-        aria-label="Удалить"
-        type="button"
-        className="card__trash"></button>
+      {isMyCard && (
+        <button
+          aria-label="Удалить"
+          type="button"
+          className="card__trash"></button>
+      )}
       <img
         src={card.link}
         alt={card.name}
@@ -19,7 +27,7 @@ const Card = ({ card, onCardClick }) => {
           <button
             aria-label="Лайк"
             type="button"
-            className="card__heart"></button>
+            className={`card__heart ${isMyLike && 'card__heart_active'}`}></button>
           <p className="card__heart-counter">{card.likes.length}</p>
         </div>
       </div>

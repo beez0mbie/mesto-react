@@ -27,7 +27,7 @@ function App() {
       .then((res) => {
         const [userInfo, cards] = res;
         setCurrentUser({ ...userInfo });
-        setCadrs(cards.reverse());
+        setCadrs(cards);
       })
       .catch((err) => console.error(`Error api.getAppInfo():\n ${err}`));
   }, []);
@@ -54,6 +54,9 @@ function App() {
   const handleCardClick = (card) => {
     setSelectedCard(card);
   };
+
+  console.log(cards);
+  console.log(currentUser);
 
   return (
     <CardsContext.Provider value={cards}>
