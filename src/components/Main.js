@@ -1,11 +1,33 @@
 import React from 'react';
-
+import { api } from '../utils/Api';
 import Card from './Card';
 import { CurrentUserContext, CardsContext } from '../contexts';
+import { hasMyLike } from '../utils';
 
-const Main = ({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) => {
+const Main = ({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, setCards }) => {
   const userInfo = React.useContext(CurrentUserContext);
   const cards = React.useContext(CardsContext);
+
+  const handleCardLike = (card) => {
+    // Снова проверяем, есть ли уже лайк на этой карточке
+    const isLiked = hasMyLike(card, userInfo);
+
+    // Отправляем запрос в API и получаем обновлённые данные карточки
+    api
+      .changeLikeCardStatus(card._id, !isLiked)
+      .then((newCard) => {
+        // проходимся по текущему стейту карточек находим карточку с нужным айди и возвращаем массив с замененной карточкой newCard
+        setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
+      })
+      .catch((err) => console.error(`Error api.changeLikeCardStatus():\n ${err}`));
+  };
+
+  const handleDeleteCard = (card) => {
+    api
+      .deleteCard(card._id)
+      .then(() => setCards((state) => state.filter((c) => c._id !== card._id)))
+      .catch((err) => console.error(`Error api.deleteCard():\n ${err}`));
+  };
 
   return (
     <main className="content">
@@ -42,6 +64,8 @@ const Main = ({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) => {
             card={card}
             key={card._id}
             onCardClick={onCardClick}
+            onCardLike={handleCardLike}
+            onCardDelete={handleDeleteCard}
           />
         ))}
       </section>

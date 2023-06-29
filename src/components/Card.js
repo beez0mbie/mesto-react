@@ -1,11 +1,11 @@
 import React from 'react';
 import { CurrentUserContext } from '../contexts';
+import { hasMyLike } from '../utils';
 
-const Card = ({ card, onCardClick }) => {
+const Card = ({ card, onCardClick, onCardLike, onCardDelete }) => {
   const userInfo = React.useContext(CurrentUserContext);
 
   const isMyCard = userInfo._id === card.owner._id;
-  const isMyLike = card.likes.some((like) => like._id === userInfo._id);
 
   return (
     <div className="card">
@@ -13,7 +13,8 @@ const Card = ({ card, onCardClick }) => {
         <button
           aria-label="Удалить"
           type="button"
-          className="card__trash"></button>
+          className="card__trash"
+          onClick={() => onCardDelete(card)}></button>
       )}
       <img
         src={card.link}
@@ -27,7 +28,8 @@ const Card = ({ card, onCardClick }) => {
           <button
             aria-label="Лайк"
             type="button"
-            className={`card__heart ${isMyLike && 'card__heart_active'}`}></button>
+            className={`card__heart ${hasMyLike(card, userInfo) && 'card__heart_active'}`}
+            onClick={() => onCardLike(card)}></button>
           <p className="card__heart-counter">{card.likes.length}</p>
         </div>
       </div>

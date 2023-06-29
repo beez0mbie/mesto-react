@@ -4,7 +4,7 @@ import Header from './Header';
 import Main from './Main';
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
-import { api } from '../utils/Api';
+import { api } from '../utils';
 import { CurrentUserContext, CardsContext } from '../contexts';
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
     cohort: '',
     _id: '',
   });
-  const [cards, setCadrs] = useState([]);
+  const [cards, setCards] = useState([]);
 
   useEffect(() => {
     api
@@ -27,7 +27,7 @@ function App() {
       .then((res) => {
         const [userInfo, cards] = res;
         setCurrentUser({ ...userInfo });
-        setCadrs(cards);
+        setCards(cards);
       })
       .catch((err) => console.error(`Error api.getAppInfo():\n ${err}`));
   }, []);
@@ -71,6 +71,7 @@ function App() {
             isEditProfilePopupOpen={isEditProfilePopupOpen}
             isAddPlacePopupOpen={isAddPlacePopupOpen}
             onCardClick={handleCardClick}
+            setCards={setCards}
           />
           <Footer />
           <PopupWithForm

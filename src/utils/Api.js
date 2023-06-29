@@ -39,6 +39,14 @@ class Api {
       headers: this.headers,
     });
 
+  changeLikeCardStatus = (cardId, shouldLike) => {
+    if (shouldLike) {
+      return this.likeCard(cardId);
+    } else {
+      return this.dislikeCard(cardId);
+    }
+  };
+
   updateAvatar = (link) =>
     this._request(`users/me/avatar`, {
       method: 'PATCH',
