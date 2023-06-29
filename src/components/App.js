@@ -4,9 +4,12 @@ import Header from './Header';
 import Main from './Main';
 import PopupWithForm from './PopupWithForm';
 import EditProfilePopup from './EditProfilePopup';
+import EditAvatarPopup from './EditAvatarPopup';
+import AddPlacePopup from './AddPlacePopup';
 import ImagePopup from './ImagePopup';
 import { api } from '../utils';
 import { CurrentUserContext, CardsContext } from '../contexts';
+import { hasMyLike } from '../utils';
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
@@ -66,8 +69,46 @@ function App() {
       .catch((err) => console.error(`Error api.updateUserInfo():\n ${err}`));
   };
 
-  console.log(cards);
-  console.log(currentUser);
+  const handleUpdateAvatar = (currentUser) => {
+    api
+      .updateAvatar(currentUser.avatar)
+      .then((user) => {
+        setCurrentUser(user);
+        closeAllPopups();
+      })
+      .catch((err) => console.error(`Error api.updateAvatar():\n ${err}`));
+  };
+
+  const handleCardLike = (card) => {
+    // Снова проверяем, есть ли уже лайк на этой карточке
+    const isLiked = hasMyLike(card, currentUser);
+
+    // Отправляем запрос в API и получаем обновлённые данные карточки
+    api
+      .changeLikeCardStatus(card._id, !isLiked)
+      .then((newCard) => {
+        // проходимся по текущему стейту карточек находим карточку с нужным айди и возвращаем массив с замененной карточкой newCard
+        setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
+      })
+      .catch((err) => console.error(`Error api.changeLikeCardStatus():\n ${err}`));
+  };
+
+  const handleDeleteCard = (card) => {
+    api
+      .deleteCard(card._id)
+      .then(() => setCards((state) => state.filter((c) => c._id !== card._id)))
+      .catch((err) => console.error(`Error api.deleteCard():\n ${err}`));
+  };
+
+  const handleAddPlace = (card) => {
+    api
+      .addCard(card.name, card.link)
+      .then((newCard) => {
+        setCards([newCard, ...cards]);
+        closeAllPopups();
+      })
+      .catch((err) => console.error(`Error api.addCard():\n ${err}`));
+  };
 
   return (
     <CardsContext.Provider value={cards}>
@@ -79,66 +120,22 @@ function App() {
             onEditProfile={handleEditProfileClick}
             onAddPlace={handleAddPlaceClick}
             onCardClick={handleCardClick}
-            setCards={setCards}
+            onCardLike={handleCardLike}
+            onCardDelete={handleDeleteCard}
           />
           <Footer />
-          <PopupWithForm
+          <EditAvatarPopup
             isOpen={isEditAvatarPopupOpen}
             onClose={closeAllPopups}
-            title="Обновить аватар"
-            name="avatar-form"
-            buttonText="Сохранить">
-            <>
-              <label className="popup-form__field">
-                <input
-                  type="url"
-                  name="popup-input-link-avatar"
-                  id="popup-input-link-avatar"
-                  placeholder="Ссылка на картинку"
-                  className="popup-form__input"
-                  required
-                />
-                <span className="popup-form__input-error popup-input-link-avatar-error"></span>
-              </label>
-            </>
-          </PopupWithForm>
+            onUpdateAvatar={handleUpdateAvatar}></EditAvatarPopup>
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
             onClose={closeAllPopups}
             onUpdateUser={handleUpdateUser}></EditProfilePopup>
-          <PopupWithForm
+          <AddPlacePopup
             isOpen={isAddPlacePopupOpen}
             onClose={closeAllPopups}
-            title="Новое Место"
-            name="card-form"
-            buttonText="Создать">
-            <>
-              <label className="popup-form__field">
-                <input
-                  type="text"
-                  name="popup-input-place"
-                  id="popup-input-place"
-                  placeholder="Название"
-                  className="popup-form__input"
-                  minLength="2"
-                  maxLength="30"
-                  required
-                />
-                <span className="popup-form__input-error popup-input-place-error"></span>
-              </label>
-              <label className="popup-form__field">
-                <input
-                  type="url"
-                  name="popup-input-link"
-                  id="popup-input-link"
-                  placeholder="Ссылка на картинку"
-                  className="popup-form__input"
-                  required
-                />
-                <span className="popup-form__input-error popup-input-link-error"></span>
-              </label>
-            </>
-          </PopupWithForm>
+            onAddPlace={handleAddPlace}></AddPlacePopup>
           <PopupWithForm
             title="Вы уверены?"
             name="delete-form"
