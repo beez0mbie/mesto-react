@@ -5,12 +5,12 @@ import { CurrentUserContext, CardsContext } from '../contexts';
 import { hasMyLike } from '../utils';
 
 const Main = ({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, setCards }) => {
-  const userInfo = React.useContext(CurrentUserContext);
+  const currentUser = React.useContext(CurrentUserContext);
   const cards = React.useContext(CardsContext);
 
   const handleCardLike = (card) => {
     // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = hasMyLike(card, userInfo);
+    const isLiked = hasMyLike(card, currentUser);
 
     // Отправляем запрос в API и получаем обновлённые данные карточки
     api
@@ -36,21 +36,21 @@ const Main = ({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, setCards }
           className="profile__logo-container"
           onClick={onEditAvatar}>
           <img
-            src={userInfo.avatar}
+            src={currentUser.avatar}
             alt="Аватар"
             className="profile__logo"
           />
         </figure>
         <div className="profile__info">
           <div className="profile__title-container">
-            <h1 className="profile__title">{userInfo.name}</h1>
+            <h1 className="profile__title">{currentUser.name}</h1>
             <button
               aria-label="Редактировать профиль"
               type="button"
               className="profile__edit-button"
               onClick={onEditProfile}></button>
           </div>
-          <p className="profile__subtitle">{userInfo.about}</p>
+          <p className="profile__subtitle">{currentUser.about}</p>
         </div>
         <button
           aria-label="Добавить карточку"

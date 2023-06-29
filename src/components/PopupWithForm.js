@@ -11,7 +11,7 @@ import React from 'react';
 // id="popup-delete">
 // name="delete-form"
 
-const PopupWithForm = ({ title, name, children, isOpen, onClose, buttonText }) => {
+const PopupWithForm = ({ title, name, children, isOpen, onClose, buttonText, onSubmit }) => {
   return (
     <div
       className={`popup ${isOpen ? 'popup_opened' : ''}`}
@@ -26,7 +26,8 @@ const PopupWithForm = ({ title, name, children, isOpen, onClose, buttonText }) =
         <form
           action="./"
           name={name}
-          className="popup-form">
+          className="popup-form"
+          onSubmit={onSubmit}>
           <fieldset className="popup-form__fieldset">
             <h2 className="popup-form__title">{title}</h2>
             {children}

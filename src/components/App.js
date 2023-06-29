@@ -3,6 +3,7 @@ import Footer from './Footer';
 import Header from './Header';
 import Main from './Main';
 import PopupWithForm from './PopupWithForm';
+import EditProfilePopup from './EditProfilePopup';
 import ImagePopup from './ImagePopup';
 import { api } from '../utils';
 import { CurrentUserContext, CardsContext } from '../contexts';
@@ -55,6 +56,16 @@ function App() {
     setSelectedCard(card);
   };
 
+  const handleUpdateUser = (currentUser) => {
+    api
+      .updateUserInfo(currentUser.name, currentUser.about)
+      .then((user) => {
+        setCurrentUser(user);
+        closeAllPopups();
+      })
+      .catch((err) => console.error(`Error api.updateUserInfo():\n ${err}`));
+  };
+
   console.log(cards);
   console.log(currentUser);
 
@@ -67,9 +78,6 @@ function App() {
             onEditAvatar={handleEditAvatarClick}
             onEditProfile={handleEditProfileClick}
             onAddPlace={handleAddPlaceClick}
-            isEditAvatarPopupOpen={isEditAvatarPopupOpen}
-            isEditProfilePopupOpen={isEditProfilePopupOpen}
-            isAddPlacePopupOpen={isAddPlacePopupOpen}
             onCardClick={handleCardClick}
             setCards={setCards}
           />
@@ -94,41 +102,10 @@ function App() {
               </label>
             </>
           </PopupWithForm>
-          <PopupWithForm
+          <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
             onClose={closeAllPopups}
-            title="Редактировать профиль"
-            name="profile-form"
-            buttonText="Сохранить">
-            <>
-              <label className="popup-form__field">
-                <input
-                  type="text"
-                  name="popup-input-name"
-                  id="popup-input-name"
-                  placeholder="Введите имя профиля"
-                  className="popup-form__input"
-                  required
-                  minLength="2"
-                  maxLength="40"
-                />
-                <span className="popup-form__input-error popup-input-name-error"></span>
-              </label>
-              <label className="popup-form__field">
-                <input
-                  type="text"
-                  name="popup-input-job"
-                  id="popup-input-job"
-                  placeholder="Введите название работы"
-                  className="popup-form__input"
-                  required
-                  minLength="2"
-                  maxLength="200"
-                />
-                <span className="popup-form__input-error popup-input-job-error"></span>
-              </label>
-            </>
-          </PopupWithForm>
+            onUpdateUser={handleUpdateUser}></EditProfilePopup>
           <PopupWithForm
             isOpen={isAddPlacePopupOpen}
             onClose={closeAllPopups}
