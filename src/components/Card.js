@@ -2,7 +2,7 @@ import React from 'react';
 import { CurrentUserContext } from '../contexts';
 import { hasMyLike } from '../utils';
 
-const Card = ({ card, onCardClick, onCardLike, onCardDelete }) => {
+const Card = ({ card, onCardClick, onCardLike, onCardTrashClick }) => {
   const userInfo = React.useContext(CurrentUserContext);
 
   const isMyCard = userInfo._id === card.owner._id;
@@ -14,7 +14,7 @@ const Card = ({ card, onCardClick, onCardLike, onCardDelete }) => {
           aria-label="Удалить"
           type="button"
           className="card__trash"
-          onClick={() => onCardDelete(card)}></button>
+          onClick={() => onCardTrashClick(card)}></button>
       )}
       <img
         src={card.link}

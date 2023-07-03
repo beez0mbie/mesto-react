@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Footer from './Footer';
 import Header from './Header';
 import Main from './Main';
-import PopupWithForm from './PopupWithForm';
+import DeleteCardPopup from './DeleteCardPopup';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
@@ -15,6 +15,8 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
+  const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+  const [cardIdToDelete, setCardIdToDelete] = useState(null);
   const [selectedCard, setSelectedCard] = useState({ name: '', link: '' });
   const [currentUser, setCurrentUser] = useState({
     name: '',
@@ -36,27 +38,46 @@ function App() {
       .catch((err) => console.error(`Error api.getAppInfo():\n ${err}`));
   }, []);
 
+  const handleClosePopupByEsc = (event) => {
+    if (event.key === 'Escape') {
+      closeAllPopups();
+    }
+  };
+
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(true);
+    document.addEventListener('keydown', handleClosePopupByEsc);
   };
 
   const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(true);
+    document.addEventListener('keydown', handleClosePopupByEsc);
   };
 
   const handleAddPlaceClick = () => {
     setIsAddPlacePopupOpen(true);
+    document.addEventListener('keydown', handleClosePopupByEsc);
+  };
+
+  const handleCardClick = (card) => {
+    setSelectedCard(card);
+    document.addEventListener('keydown', handleClosePopupByEsc);
+  };
+
+  const handleCardTrashClick = (card) => {
+    setIsDeletePopupOpen(true);
+    setCardIdToDelete(card._id);
+    document.addEventListener('keydown', handleClosePopupByEsc);
   };
 
   const closeAllPopups = () => {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
+    setIsDeletePopupOpen(false);
     setSelectedCard({ name: '', link: '' });
-  };
-
-  const handleCardClick = (card) => {
-    setSelectedCard(card);
+    setCardIdToDelete(null);
+    document.removeEventListener('keydown', handleClosePopupByEsc);
   };
 
   const handleUpdateUser = (currentUser) => {
@@ -80,10 +101,8 @@ function App() {
   };
 
   const handleCardLike = (card) => {
-    // Снова проверяем, есть ли уже лайк на этой карточке
     const isLiked = hasMyLike(card, currentUser);
 
-    // Отправляем запрос в API и получаем обновлённые данные карточки
     api
       .changeLikeCardStatus(card._id, !isLiked)
       .then((newCard) => {
@@ -93,10 +112,13 @@ function App() {
       .catch((err) => console.error(`Error api.changeLikeCardStatus():\n ${err}`));
   };
 
-  const handleDeleteCard = (card) => {
+  const handleDeleteCard = (cardId) => {
     api
-      .deleteCard(card._id)
-      .then(() => setCards((state) => state.filter((c) => c._id !== card._id)))
+      .deleteCard(cardId)
+      .then(() => {
+        setCards((state) => state.filter((c) => c._id !== cardId));
+        closeAllPopups();
+      })
       .catch((err) => console.error(`Error api.deleteCard():\n ${err}`));
   };
 
@@ -121,7 +143,7 @@ function App() {
             onAddPlace={handleAddPlaceClick}
             onCardClick={handleCardClick}
             onCardLike={handleCardLike}
-            onCardDelete={handleDeleteCard}
+            onCardTrashClick={handleCardTrashClick}
           />
           <Footer />
           <EditAvatarPopup
@@ -136,11 +158,11 @@ function App() {
             isOpen={isAddPlacePopupOpen}
             onClose={closeAllPopups}
             onAddPlace={handleAddPlace}></AddPlacePopup>
-          <PopupWithForm
-            title="Вы уверены?"
-            name="delete-form"
+          <DeleteCardPopup
+            isOpen={isDeletePopupOpen}
             onClose={closeAllPopups}
-            buttonText="Да"
+            cardId={cardIdToDelete}
+            onDeleteCard={handleDeleteCard}
           />
           <ImagePopup
             card={selectedCard}

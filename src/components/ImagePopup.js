@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 const ImagePopup = ({ card, onClose }) => {
+  const popup = useRef();
+  useEffect(() => {
+    popup.current.addEventListener('mousedown', (evt) => {
+      if (evt.target.classList.contains('popup_opened')) {
+        onClose();
+      }
+    });
+  }, [onClose]);
   return (
     <div
       className={`popup popup_overlay_dark ${card.name ? 'popup_opened' : ''}`}
-      id="popup-image">
+      id="popup-image"
+      ref={popup}>
       <div className="popup__container">
         <button
           className="popup__close-button"

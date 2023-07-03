@@ -19,8 +19,7 @@ const AddPlacePopup = ({ isOpen, onClose, onAddPlace }) => {
     setPlace('');
     setLink('');
   };
-  console.log(place);
-  console.log(link);
+
   return (
     <PopupWithForm
       isOpen={isOpen}

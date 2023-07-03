@@ -8,7 +8,7 @@ const Main = ({
   onAddPlace,
   onCardClick,
   onCardLike,
-  onCardDelete,
+  onCardTrashClick,
 }) => {
   const currentUser = React.useContext(CurrentUserContext);
   const cards = React.useContext(CardsContext);
@@ -49,7 +49,7 @@ const Main = ({
             key={card._id}
             onCardClick={onCardClick}
             onCardLike={onCardLike}
-            onCardDelete={onCardDelete}
+            onCardTrashClick={onCardTrashClick}
           />
         ))}
       </section>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 // id="popup-avatar"
 // name="avatar-form"
 
@@ -12,10 +12,19 @@ import React from 'react';
 // name="delete-form"
 
 const PopupWithForm = ({ title, name, children, isOpen, onClose, buttonText, onSubmit }) => {
+  const popup = useRef();
+  useEffect(() => {
+    popup.current.addEventListener('mousedown', (evt) => {
+      if (evt.target.classList.contains('popup_opened')) {
+        onClose();
+      }
+    });
+  }, [onClose]);
   return (
     <div
       className={`popup ${isOpen ? 'popup_opened' : ''}`}
-      id={`popup-${name}`}>
+      id={`popup-${name}`}
+      ref={popup}>
       <div className="popup__container">
         <button
           aria-label="Закрыть попап"
