@@ -1,15 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-// id="popup-avatar"
-// name="avatar-form"
-
-// id = 'popup-change-profile';
-// name = 'profile-form';
-
-// id="popup-add-card">
-// name="card-form"
-
-// id="popup-delete">
-// name="delete-form"
 
 const PopupWithForm = ({ title, name, children, isOpen, onClose, buttonText, onSubmit }) => {
   const popup = useRef();
