@@ -38,36 +38,42 @@ function App() {
       .catch((err) => console.error(`Error api.getAppInfo():\n ${err}`));
   }, []);
 
-  const handleClosePopupByEsc = (event) => {
-    if (event.key === 'Escape') {
-      closeAllPopups();
+  useEffect(() => {
+    const handleClosePopupByEsc = (event) => {
+      if (event.key === 'Escape') {
+        closeAllPopups();
+      }
+    };
+    if (
+      isEditAvatarPopupOpen ||
+      isEditProfilePopupOpen ||
+      isAddPlacePopupOpen ||
+      isDeletePopupOpen
+    ) {
+      document.addEventListener('keydown', handleClosePopupByEsc);
     }
-  };
+    return () => document.removeEventListener('keydown', handleClosePopupByEsc);
+  }, [isEditAvatarPopupOpen, isEditProfilePopupOpen, isAddPlacePopupOpen, isDeletePopupOpen]);
 
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(true);
-    document.addEventListener('keydown', handleClosePopupByEsc);
   };
 
   const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(true);
-    document.addEventListener('keydown', handleClosePopupByEsc);
   };
 
   const handleAddPlaceClick = () => {
     setIsAddPlacePopupOpen(true);
-    document.addEventListener('keydown', handleClosePopupByEsc);
   };
 
   const handleCardClick = (card) => {
     setSelectedCard(card);
-    document.addEventListener('keydown', handleClosePopupByEsc);
   };
 
   const handleCardTrashClick = (card) => {
     setIsDeletePopupOpen(true);
     setCardIdToDelete(card._id);
-    document.addEventListener('keydown', handleClosePopupByEsc);
   };
 
   const closeAllPopups = () => {
@@ -77,7 +83,6 @@ function App() {
     setIsDeletePopupOpen(false);
     setSelectedCard({ name: '', link: '' });
     setCardIdToDelete(null);
-    document.removeEventListener('keydown', handleClosePopupByEsc);
   };
 
   const handleUpdateUser = (currentUser) => {
