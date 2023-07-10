@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import PopupWithForm from './PopupWithForm';
 
-const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar }) => {
+const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar, buttonText }) => {
   const inputAvatar = useRef();
 
   useEffect(() => {
@@ -16,13 +16,14 @@ const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar }) => {
       avatar: inputAvatar.current.value,
     });
   };
+
   return (
     <PopupWithForm
       isOpen={isOpen}
       onClose={onClose}
       title="Обновить аватар"
       name="avatar-form"
-      buttonText="Сохранить"
+      buttonText={buttonText}
       onSubmit={handleSubmit}>
       <>
         <label className="popup-form__field">

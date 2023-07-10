@@ -27,6 +27,8 @@ function App() {
   });
   const [cards, setCards] = useState([]);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     api
       .getAppInfo()
@@ -96,13 +98,15 @@ function App() {
   };
 
   const handleUpdateAvatar = (currentUser) => {
+    setIsLoading(true);
     api
       .updateAvatar(currentUser.avatar)
       .then((user) => {
         setCurrentUser(user);
         closeAllPopups();
       })
-      .catch((err) => console.error(`Error api.updateAvatar():\n ${err}`));
+      .catch((err) => console.error(`Error api.updateAvatar():\n ${err}`))
+      .finally(setIsLoading(false));
   };
 
   const handleCardLike = (card) => {
@@ -154,7 +158,8 @@ function App() {
           <EditAvatarPopup
             isOpen={isEditAvatarPopupOpen}
             onClose={closeAllPopups}
-            onUpdateAvatar={handleUpdateAvatar}></EditAvatarPopup>
+            onUpdateAvatar={handleUpdateAvatar}
+            buttonText={isLoading ? 'Сохранение...' : 'Сохранить'}></EditAvatarPopup>
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
             onClose={closeAllPopups}
