@@ -88,13 +88,15 @@ function App() {
   };
 
   const handleUpdateUser = (currentUser) => {
+    setIsLoading(true);
     api
       .updateUserInfo(currentUser.name, currentUser.about)
       .then((user) => {
         setCurrentUser(user);
         closeAllPopups();
       })
-      .catch((err) => console.error(`Error api.updateUserInfo():\n ${err}`));
+      .catch((err) => console.error(`Error api.updateUserInfo():\n ${err}`))
+      .finally(() => setIsLoading(false));
   };
 
   const handleUpdateAvatar = (currentUser) => {
@@ -106,7 +108,19 @@ function App() {
         closeAllPopups();
       })
       .catch((err) => console.error(`Error api.updateAvatar():\n ${err}`))
-      .finally(setIsLoading(false));
+      .finally(() => setIsLoading(false));
+  };
+
+  const handleAddPlace = (card) => {
+    setIsLoading(true);
+    api
+      .addCard(card.name, card.link)
+      .then((newCard) => {
+        setCards([newCard, ...cards]);
+        closeAllPopups();
+      })
+      .catch((err) => console.error(`Error api.addCard():\n ${err}`))
+      .finally(() => setIsLoading(false));
   };
 
   const handleCardLike = (card) => {
@@ -131,16 +145,6 @@ function App() {
       .catch((err) => console.error(`Error api.deleteCard():\n ${err}`));
   };
 
-  const handleAddPlace = (card) => {
-    api
-      .addCard(card.name, card.link)
-      .then((newCard) => {
-        setCards([newCard, ...cards]);
-        closeAllPopups();
-      })
-      .catch((err) => console.error(`Error api.addCard():\n ${err}`));
-  };
-
   return (
     <CardsContext.Provider value={cards}>
       <CurrentUserContext.Provider value={currentUser}>
@@ -163,11 +167,13 @@ function App() {
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
             onClose={closeAllPopups}
-            onUpdateUser={handleUpdateUser}></EditProfilePopup>
+            onUpdateUser={handleUpdateUser}
+            buttonText={isLoading ? 'Сохранение...' : 'Сохранить'}></EditProfilePopup>
           <AddPlacePopup
             isOpen={isAddPlacePopupOpen}
             onClose={closeAllPopups}
-            onAddPlace={handleAddPlace}></AddPlacePopup>
+            onAddPlace={handleAddPlace}
+            buttonText={isLoading ? 'Сохранение...' : 'Создать'}></AddPlacePopup>
           <DeleteCardPopup
             isOpen={isDeletePopupOpen}
             onClose={closeAllPopups}
